@@ -1,0 +1,18 @@
+### Result
+{"during":{"loading":true,"pending":1},"after":{"loading":false,"pending":0},"matchedArticles":3}
+### Ran Playwright code
+```js
+await (async (page) => {
+ await page.route('**/livewire-*/update', async route => { await new Promise(resolve => setTimeout(resolve, 1400)); await route.continue(); });
+ try {
+  await page.getByRole('textbox', { name: 'Cari Artikel', exact: true }).fill('Mitosis');
+  await page.waitForFunction(() => window.Alpine.store('ui').loading);
+  const during = await page.evaluate(() => ({ loading: window.Alpine.store('ui').loading, pending: window.Alpine.store('ui').pending }));
+  await page.waitForFunction(() => window.Alpine.store('ui').pending === 0);
+  return { during, after: await page.evaluate(() => ({ loading: window.Alpine.store('ui').loading, pending: window.Alpine.store('ui').pending })), matchedArticles: await page.locator('main article').count() };
+ } finally { await page.unroute('**/livewire-*/update'); }
+})(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8134/articles?search=Mitosis
+- Page Title: Science Articles Library - BioLearn

@@ -1,0 +1,17 @@
+### Result
+{"selected":"Perguruan Tinggi","allClearsSelection":true}
+### Ran Playwright code
+```js
+await (async (page) => {
+ const zone = page.getByRole('combobox', { name: 'Zona', exact: true });
+ await zone.selectOption('pt');
+ await page.waitForFunction(() => document.querySelector('nav[aria-label="Pilih jenjang belajar"] a[aria-current=true]')?.textContent === 'Perguruan Tinggi');
+ const selected = await page.getByRole('navigation', { name: 'Pilih jenjang belajar' }).locator('[aria-current=true]').innerText();
+ await zone.selectOption('all');
+ await page.waitForFunction(() => document.querySelectorAll('nav[aria-label="Pilih jenjang belajar"] a[aria-current=true]').length === 0);
+ return { selected, allClearsSelection: true };
+})(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8134/articles
+- Page Title: Science Articles Library - BioLearn

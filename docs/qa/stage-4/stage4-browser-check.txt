@@ -1,0 +1,26 @@
+### Result
+{"demo_login_success":true,"dashboard":{"completed":1,"active":1},"certificate":{"owner":2,"print":1,"overflow":false},"demo_admin_status":403,"course_images":{"broken":[],"count":5},"errors":[]}
+### Ran Playwright code
+```js
+await (async (page) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const dashboard = { completed: await page.getByText('100% selesai - status enrollment: completed', {exact:true}).count(), active: await page.getByText('33% selesai - status enrollment: active', {exact:true}).count() };
+  await page.getByRole('link', {name: 'Sertifikat', exact:true}).click();
+  await page.getByRole('heading', {name: 'Sertifikat Kelulusan', exact:true}).waitFor();
+  const certificate = { owner: await page.getByText('Nadia Pratiwi', {exact:true}).count(), print: await page.getByRole('button', {name: 'Cetak Sertifikat', exact:true}).count(), overflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth) };
+  const denied = await page.goto('http://127.0.0.1:8135/admin/dashboard');
+  const adminStatus = denied.status();
+  await page.goto('http://127.0.0.1:8135/courses');
+  await page.setViewportSize({width:1440,height:1000});
+  await page.locator('body').ariaSnapshot();
+  await page.screenshot({path:'output/playwright/stage4-courses-desktop.png',scale:'css'});
+  const images = await page.evaluate(() => ({broken: [...document.images].filter(i => !i.complete || i.naturalWidth === 0).map(i=>i.src), count:document.images.length}));
+  return {demo_login_success:true,dashboard,certificate,demo_admin_status:adminStatus,course_images:images,errors};
+})(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8135/courses
+- Page Title: Courses - BioLearn
+### Events
+- New console entries: .playwright-cli\console-2026-10-31T06-27-19-953Z.log#L1

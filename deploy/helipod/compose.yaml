@@ -1,0 +1,35 @@
+name: biology-learn
+
+services:
+  biolearn:
+    image: biology-learn:${RELEASE_TAG:?Set RELEASE_TAG}
+    build:
+      context: ${APP_SOURCE:-../..}
+      dockerfile: deploy/helipod/Dockerfile
+    restart: unless-stopped
+    env_file: ${APP_ENV_FILE:-.env.production}
+    ports: ["127.0.0.1:8083:80"]
+    volumes:
+      - ./shared/storage:/var/www/html/storage
+    networks:
+      edge:
+        aliases: [biology-learn-web]
+    mem_limit: 192m
+    pids_limit: 80
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1/up"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+networks:
+  edge:
+    external: true
+    name: tera-vps_default

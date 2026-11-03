@@ -1,0 +1,13 @@
+{
+    "checked_tables": 23,
+    "changed_tables_after_isolated_browser_qa": [],
+    "counts": {
+        "users": 8,
+        "articles": 12,
+        "course_enrollments": 9,
+        "lesson_progress": 22,
+        "final_exam_attempts": 7,
+        "certificates": 3,
+        "newsletter_subscriptions": 5
+    }
+}

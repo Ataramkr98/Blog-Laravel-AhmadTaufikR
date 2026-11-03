@@ -1,0 +1,50 @@
+### Result
+{"isolatedHome":1,"completed":true,"savedDraft":1,"firstReload":1,"cachedReload":1,"errors":[]}
+### Ran Playwright code
+```js
+await (async (page) => {
+ const root = 'http://127.0.0.1:8134';
+ const errors = [];
+ const onError = error => errors.push(error.message);
+ page.on('pageerror', onError);
+ try {
+  await page.getByRole('button', { name: 'Login Akun Demo', exact: true }).click();
+  await page.waitForURL(root + '/');
+  const isolatedHome = await page.getByRole('link', { name: 'Verifikasi SQLite QA: Materi Biologi', exact: true }).count();
+  await page.goto(root + '/courses/fotosintesis-dan-evolusi-kehidupan-sma');
+  await page.locator('body').ariaSnapshot();
+  await page.getByRole('link', { name: 'Mulai lesson', exact: true }).first().click();
+  await page.locator('body').ariaSnapshot();
+  await page.getByRole('button', { name: 'Tandai Selesai', exact: true }).click();
+  await page.getByRole('button', { name: 'Lesson sudah selesai', exact: true }).waitFor();
+  const completed = await page.getByRole('button', { name: 'Lesson sudah selesai', exact: true }).isDisabled();
+  await page.getByRole('button', { name: 'Buka menu akun', exact: true }).click();
+  await page.locator('body').ariaSnapshot();
+  await page.getByRole('button', { name: 'Keluar (Logout)', exact: true }).click();
+  await page.goto(root + '/sign-in');
+  await page.locator('body').ariaSnapshot();
+  await page.getByRole('textbox', { name: 'Alamat email', exact: true }).fill('admin@biology.learn');
+  await page.getByRole('textbox', { name: 'Password', exact: true }).fill('password');
+  await page.getByRole('button', { name: 'Masuk Sistem', exact: true }).click();
+  await page.waitForURL('**/admin/dashboard');
+  await page.goto(root + '/admin/articles');
+  await page.locator('body').ariaSnapshot();
+  await page.getByRole('button', { name: 'Tambah Artikel', exact: true }).click();
+  await page.locator('[role=dialog]').ariaSnapshot();
+  await page.getByRole('textbox', { name: 'Judul Artikel', exact: true }).fill('Ekologi QA Terisolasi SQLite');
+  await page.getByRole('combobox', { name: 'Kategori & Jenjang', exact: true }).selectOption('1');
+  await page.getByRole('textbox', { name: 'Konten artikel ilmiah', exact: true }).fill('Materi ini hanya dibuat dalam database QA SQLite.');
+  await page.getByRole('button', { name: 'Simpan Artikel', exact: true }).click();
+  await page.getByRole('status').filter({ hasText: 'Artikel berhasil disimpan.' }).waitFor();
+  const savedDraft = await page.getByRole('cell', { name: 'Ekologi QA Terisolasi SQLite', exact: true }).count();
+  await page.goto(root + '/articles');
+  const firstReload = await page.getByRole('heading', { name: 'Kamus Nama Latin' }).count();
+  await page.reload();
+  const cachedReload = await page.getByRole('heading', { name: 'Kamus Nama Latin' }).count();
+  return { isolatedHome, completed, savedDraft, firstReload, cachedReload, errors };
+ } finally { page.off('pageerror', onError); }
+})(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8134/articles
+- Page Title: Science Articles Library - BioLearn

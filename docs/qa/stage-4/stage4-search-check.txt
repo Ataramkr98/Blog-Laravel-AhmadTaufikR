@@ -1,0 +1,27 @@
+### Result
+{"checks":[{"width":360,"input_named":true,"button_nowrap":true,"overflow":false,"brokenImages":[]},{"width":768,"input_named":true,"button_nowrap":true,"overflow":false,"brokenImages":[]},{"width":1440,"input_named":true,"button_nowrap":true,"overflow":false,"brokenImages":[]}],"search_navigation":true,"errors":[]}
+### Ran Playwright code
+```js
+await (async (page) => {
+  const checks = [];
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  for (const width of [360,768,1440]) {
+    await page.setViewportSize({width,height:1000});
+    await page.goto('http://127.0.0.1:8135/');
+    await page.locator('body').ariaSnapshot();
+    const search = page.getByRole('textbox', {name:'Cari materi biologi',exact:true});
+    const button = page.getByRole('button', {name:'Cari',exact:true});
+    const images = await page.evaluate(async () => {
+      await Promise.all([...document.images].map(img=>{img.loading='eager';return img.decode().catch(()=>null)}));
+      return [...document.images].filter(img=>img.naturalWidth===0).map(img=>img.src);
+    });
+    checks.push({width,input_named:await search.count()===1,button_nowrap:await button.evaluate(el=>getComputedStyle(el).whiteSpace==='nowrap'),overflow:await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),brokenImages:images});
+  }
+  await page.screenshot({path:'output/playwright/stage4-home-desktop.png',scale:'css'});
+  await page.getByRole('textbox',{name:'Cari materi biologi',exact:true}).fill('DNA');
+  await page.getByRole('button',{name:'Cari',exact:true}).click();
+  await page.waitForURL('**/articles?search=DNA');
+  return {checks,search_navigation:page.url().endsWith('/articles?search=DNA'),errors};
+})(page);
+```

@@ -1,0 +1,16 @@
+### Result
+{"during":{"disabled":true,"busy":"true"},"success":"Email Anda berhasil didaftarkan untuk newsletter.\n×"}
+### Ran Playwright code
+```js
+await (async (page) => {
+ await page.route('**/newsletter/subscribe', async route => { await new Promise(resolve => setTimeout(resolve, 1400)); await route.continue(); });
+ try {
+  await page.getByRole('textbox', { name: 'Email newsletter', exact: true }).fill('qa.newsletter.stage3@example.test');
+  await page.getByRole('button', { name: 'Subscribe', exact: true }).click();
+  await page.waitForFunction(() => document.querySelector('form[aria-busy=true]'));
+  const during = await page.evaluate(() => ({ disabled: document.querySelector('footer button[type=submit]').disabled, busy: document.querySelector('footer form').getAttribute('aria-busy') }));
+  await page.getByRole('status').filter({ hasText: 'Email Anda berhasil didaftarkan' }).waitFor();
+  return { during, success: await page.getByRole('status').filter({ hasText: 'Email Anda berhasil didaftarkan' }).innerText() };
+ } finally { await page.unroute('**/newsletter/subscribe'); }
+})(page);
+```

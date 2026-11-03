@@ -1,0 +1,17 @@
+{
+  "driver": "sqlite",
+  "inside_clean_install": true,
+  "counts": {
+    "users": 7,
+    "articles": 12,
+    "courses": 4,
+    "glossaries": 16,
+    "course_enrollments": 9,
+    "lesson_progress": 22,
+    "final_exam_attempts": 4,
+    "certificates": 3
+  },
+  "demo_password_valid": true,
+  "demo_role": "pembaca",
+  "storage_link_type": "Junction"
+}

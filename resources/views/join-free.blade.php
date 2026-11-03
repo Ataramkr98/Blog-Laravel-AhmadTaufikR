@@ -1,0 +1,21 @@
+@extends('layouts.app')
+@section('title', 'Daftar Gratis - BioLearn')
+@section('content')
+<div class="mx-auto grid max-w-5xl gap-10 px-4 py-10 sm:px-6 sm:py-16 lg:grid-cols-2 lg:items-center">
+    <section class="space-y-6"><p class="text-xs font-bold uppercase tracking-[.2em] text-emerald-700">Mulai perjalanan ilmiah</p><h1 class="text-3xl font-bold leading-tight sm:text-4xl">Dari rasa ingin tahu<br>menjadi pemahaman.</h1><p class="text-sm leading-relaxed text-gray-600">Satu akun gratis untuk belajar sesuai jenjang Anda dan melacak pencapaian.</p>
+        <ul class="space-y-4">@foreach (['Artikel Terkurasi SMA/PT' => 'Materi biologi yang dapat disaring menurut jenjang dan topik.', 'Glosarium Interaktif' => 'Pahami istilah ilmiah langsung saat membaca materi.', 'Kuis Mandiri' => 'Uji pemahaman dan pelajari pembahasan jawabannya.'] as $feature => $description)<li class="flex gap-4 rounded-2xl border border-gray-200 bg-white p-4"><span class="text-emerald-700" aria-hidden="true">✓</span><div><h2 class="text-sm font-semibold">{{ $feature }}</h2><p class="mt-1 text-xs leading-relaxed text-gray-600">{{ $description }}</p></div></li>@endforeach</ul>
+    </section>
+    <section class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8"><h2 class="text-2xl font-bold">Buat akun gratis</h2><p class="mt-2 text-sm text-gray-600">Sudah terdaftar? <a href="{{ route('sign-in') }}" class="font-semibold text-emerald-700 underline underline-offset-4">Sign In</a></p>
+        <form action="{{ route('register') }}" method="POST" class="mt-7 space-y-5" data-success-message="Akun berhasil dibuat. Selamat belajar di BioLearn!">@csrf
+            @if($errors->any())<div role="alert" class="rounded-xl bg-red-50 p-4 text-sm text-red-800">@foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach</div>@endif
+            <div><label for="register-name" class="mb-2 block text-sm font-semibold">Nama lengkap</label><input id="register-name" name="name" autocomplete="name" required maxlength="255" value="{{ old('name') }}" class="w-full rounded-xl border-gray-300 text-sm"></div>
+            <div><label for="register-email" class="mb-2 block text-sm font-semibold">Alamat email</label><input id="register-email" type="email" name="email" autocomplete="username" required value="{{ old('email') }}" class="w-full rounded-xl border-gray-300 text-sm"></div>
+            <div><label for="register-password" class="mb-2 block text-sm font-semibold">Password</label><input id="register-password" type="password" name="password" autocomplete="new-password" minlength="8" required aria-describedby="password-hint" class="w-full rounded-xl border-gray-300 text-sm"><p id="password-hint" class="mt-2 text-xs text-gray-600">Gunakan minimal 8 karakter.</p></div>
+            <div><label for="register-password-confirmation" class="mb-2 block text-sm font-semibold">Konfirmasi password</label><input id="register-password-confirmation" type="password" name="password_confirmation" autocomplete="new-password" minlength="8" required class="w-full rounded-xl border-gray-300 text-sm"></div>
+            <fieldset><legend class="mb-2 text-sm font-semibold">Jenjang belajar</legend><div class="grid grid-cols-2 gap-3">@foreach(['sma' => 'SMA', 'pt' => 'Perguruan Tinggi'] as $level => $label)<label class="flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border border-gray-300 p-3 text-xs has-checked:border-emerald-600 has-checked:bg-emerald-50"><input type="radio" name="academic_level" value="{{ $level }}" @checked(old('academic_level', 'sma') === $level) class="accent-emerald-700">{{ $label }}</label>@endforeach</div></fieldset>
+            <p class="text-xs leading-relaxed text-gray-600">Dengan mendaftar, Anda menyetujui <a href="{{ route('terms') }}" class="text-emerald-700 underline">Ketentuan Penggunaan</a> dan <a href="{{ route('privacy') }}" class="text-emerald-700 underline">Kebijakan Privasi</a>.</p>
+            <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-800"><span data-submit-spinner class="loading-spinner" aria-hidden="true"></span>Daftar Gratis</button>
+        </form>
+    </section>
+</div>
+@endsection

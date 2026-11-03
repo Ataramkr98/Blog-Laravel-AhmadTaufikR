@@ -1,0 +1,23 @@
+{
+  "public": {
+    "checks": 15,
+    "overflow": 0,
+    "unexpected_status": 0,
+    "unlabeled": 0,
+    "runtime_errors": []
+  },
+  "admin": {
+    "checks": 24,
+    "overflow": 0,
+    "unexpected_status": 0,
+    "unlabeled": 0,
+    "runtime_errors": []
+  },
+  "guest": {
+    "checks": 18,
+    "overflow": 0,
+    "unexpected_status": 0,
+    "unlabeled": 0,
+    "runtime_errors": []
+  }
+}

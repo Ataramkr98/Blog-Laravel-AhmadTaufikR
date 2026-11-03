@@ -1,0 +1,9 @@
+{
+  "setup_from_clean_source": true,
+  "repeated_prepare_env_unchanged": true,
+  "repeated_prepare_sqlite_unchanged": true,
+  "production_environment_rejected": true,
+  "cached_config_rejected": true,
+  "guard_checks_env_unchanged": true,
+  "guard_checks_sqlite_unchanged": true
+}

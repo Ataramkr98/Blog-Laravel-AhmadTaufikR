@@ -1,0 +1,34 @@
+### Result
+{"home_status":200,"broken_images":[],"demo_login_success":true,"dashboard_active":true,"dashboard_completed":true,"certificate_owner_present":true,"lowercase_search_status":200,"lowercase_search_articles":6,"health_status":200,"errors":[],"failed":[]}
+### Ran Playwright code
+```js
+await (async (page) => {
+  const errors=[];
+  const failed=[];
+  const onError=e=>errors.push(e.message);
+  const onFailed=r=>failed.push(r.url());
+  page.on('pageerror',onError);
+  page.on('requestfailed',onFailed);
+  try {
+    const response=await page.goto('http://127.0.0.1:8136/');
+    const images=await page.evaluate(async()=>{await Promise.all([...document.images].map(img=>{img.loading='eager';return img.decode().catch(()=>null)}));return [...document.images].filter(img=>img.naturalWidth===0).map(img=>img.src)});
+    await page.goto('http://127.0.0.1:8136/sign-in');
+    await page.locator('body').ariaSnapshot();
+    await page.getByRole('button',{name:'Login Akun Demo',exact:true}).click();
+    await page.waitForURL('http://127.0.0.1:8136/');
+    await page.goto('http://127.0.0.1:8136/my-courses');
+    const dashboard=await page.locator('body').ariaSnapshot();
+    await page.getByRole('heading',{name:'Kursus Saya',exact:true}).waitFor();
+    await page.getByRole('link',{name:'Sertifikat',exact:true}).click();
+    await page.getByRole('heading',{name:'Sertifikat Kelulusan',exact:true}).waitFor();
+    const certificateOwner=await page.getByText('Nadia Pratiwi',{exact:true}).count();
+    const search=await page.goto('http://127.0.0.1:8136/articles?search=dna');
+    const results=await page.locator('main article').count();
+    const health=await page.request.get('http://127.0.0.1:8136/up');
+    return {home_status:response.status(),broken_images:images,demo_login_success:true,dashboard_active:dashboard.includes('active'),dashboard_completed:dashboard.includes('completed'),certificate_owner_present:certificateOwner>0,lowercase_search_status:search.status(),lowercase_search_articles:results,health_status:health.status(),errors,failed};
+  } finally {page.off('pageerror',onError);page.off('requestfailed',onFailed)}
+})(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8136/articles?search=dna
+- Page Title: Science Articles Library - BioLearn

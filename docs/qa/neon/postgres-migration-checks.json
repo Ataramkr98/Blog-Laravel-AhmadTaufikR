@@ -1,0 +1,8 @@
+{
+    "migrations_forward_rollback_forward": true,
+    "all_workflow_statuses_accepted": true,
+    "invalid_status_rejected": true,
+    "mixed_case_email_lookup": true,
+    "mixed_case_email_unique": true,
+    "case_insensitive_glossary_search": true
+}

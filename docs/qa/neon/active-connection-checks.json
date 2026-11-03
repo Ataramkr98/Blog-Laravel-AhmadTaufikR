@@ -1,0 +1,16 @@
+{
+    "active_driver": "pgsql",
+    "tls_required": true,
+    "channel_binding_required": true,
+    "pooled": true,
+    "direct_migrations_configured": true,
+    "server_version": "18.6 (4e5fd08)",
+    "non_database_env_unchanged": true,
+    "demo_mixed_case_login_lookup": true,
+    "demo_password_valid": true,
+    "article_search_lowercase_matches": 6,
+    "glossary_search_lowercase_matches": 3,
+    "json_boolean_write_round_trip": true,
+    "write_check_rolled_back": true,
+    "pending_migrations": 0
+}
